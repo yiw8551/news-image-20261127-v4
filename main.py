@@ -22,12 +22,16 @@ def main():
         out = os.environ["MAKEFUN_OUTPUT_DIR"]
     else:
         out = "output"
+    if not os.path.isfile(src):
+        raise FileNotFoundError(f"entry image not found: {src}")
     if os.path.isdir(out):
         out = os.path.join(out, "entry.png")
     parent = os.path.dirname(os.path.abspath(out))
     if parent:
         os.makedirs(parent, exist_ok=True)
     shutil.copyfile(src, out)
+    if os.path.getsize(out) != os.path.getsize(src):
+        raise IOError(f"incomplete copy: {out} is not the same size as {src}")
 
 
 if __name__ == "__main__":
